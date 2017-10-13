@@ -1,0 +1,4 @@
+class Star
+{
+  
+}//end star
