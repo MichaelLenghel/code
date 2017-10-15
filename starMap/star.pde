@@ -9,7 +9,7 @@ class Star
   Star(TableRow row)
   {
     displayName = row.getString("Display Name");
-    distance = row.getFloat("Display Name");
+    distance = row.getFloat("Distance");
     hab = (row.getInt("Hab?") == 1);
     absMag = row.getFloat("AbsMag");
     xg = row.getFloat("Xg");
