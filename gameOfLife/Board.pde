@@ -63,36 +63,30 @@ class Board
   // Have valid ranges
   boolean isOn(int row, int col)
   {
-    if(row == 1 && col == 1 && row <= size && col <= size)
-    {
-      return(true);
-    }//end if
-    
-    else
+    if (row < 0 || row >= size || col < 0 || col >= size)
     {
       return false;
+    }
+    else
+    {
+      return current[row][col];
     }//end else
-    
   }//end isOn
   
-  int countLiveCellsAround(int row1, int col1)
+  int countLiveCellsAround(int row, int col)
   {
-    int counter, row, col;
-    counter = 0;
+    int counter = 0;
+    
     //Checking 8 squares surrounding the square. 
-    for(row = (row1 - 1) ; row < row1 + 3 ; row ++)
+    for(int r = (row - 1) ; r <= row + 1 ; r ++)
     {
-      for (col = (col1 - 1) ; col < col1 + 3 ; col ++)
+      for (int c = (col - 1) ; c <= col + 1 ; c ++)
       {
         //Make sure that the middle square is not counted
-        if(row != row1 && col != col1)
-        {
-          if(isOn(row, col))
+          if(isOn(r, c) && !(r == row && c == col))
           {
             counter++;
           }//end nested if
-        }//end outer if
-
       }//end inner for
     }//end outer for
     return counter;
@@ -107,37 +101,65 @@ class Board
   {
     int counter = 0;
     
-    
     /*The actual rules for life as we know it*/
     for(int row = 0 ; row < size ; row ++)
     {
       for (int col = 0 ; col < size ; col ++)
       {
-        //1. Any live cell with fewer than two live neighbours dies, as if caused by underpopulation.
-        if(counter < 2 && (current[row][col]))
+        counter = countLiveCellsAround(row, col);
+        
+        if(current[row][col])
         {
-          fill(0);
+          //1. A live cell with 2 or 3 live neighbours will continue to live
+          if(counter == 2 || counter == 3)
+          {
+            next[row][col] = true;
+          }//end if
+          
+          //2. Any live cell with fewer than 2 neighbours dies as if by underpopulation
+          else if(counter < 2)
+          {
+            next[row][col] = false;
+          }//end else if
+          
+          //3. Any live cell with more than three live neighbours dies, as if by overpopulation.
+          else if(counter > 3)
+          {
+            next[row][col] = false;
+          }  
         }//end if
         
-        //2. Any live cell with two or three live neighbours lives on to the next generation. 
-        else if(counter == 2 || counter == 3 && (current[row][col]))
+        else
         {
-          //Color change not needed but done any way for uniformity of the rules
-          fill(0, 255, 0);
-        }//end else if
-        
-        //3. Any live cell with more than three live neighbours dies, as if by overpopulation.
-        else if(counter > 3 && (current[row][col]))
-        {
-          fill(0, 255, 0);
-        }
-        
-        //Any dead cell with exactly three live neighbours becomes a live cell, as if by reproduction.
-        else if(counter == 3 && !(current[row][col]))
-        {
-         fill(0, 255, 0); 
-        }//end else if   
+           //4.Any dead cell with exactly three live neighbours becomes a live cell, as if by reproduction.
+          if(counter == 3)
+          {
+           next[row][col] = true; 
+          }//end if
+          else
+          {
+            next[row][col] = false;
+          }//end else
+        }//end else
+          
       }//end inner for  
     }//end outer for
+    
+    boolean[][] temp;
+    temp = current;
+    current = next;
+    next = temp;
   }//end void update
+  
+  void line()
+  {
+    for(int i = 0; i < size; i++)
+    {
+        current[50][i] = true;
+        
+        current[50][i] = true;
+        
+        current[50][i] = true;
+    }//end for
+  }//end line
 }//end class Board
